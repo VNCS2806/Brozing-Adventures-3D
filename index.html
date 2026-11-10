@@ -2,501 +2,761 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brozing Adventures 3D</title>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Segoe UI',Arial,sans-serif;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
-  #game{display:block;width:100%;height:100%}
-  #ui{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10}
-  #loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fc0;font-size:18px;font-weight:700;text-align:center;z-index:100;padding:24px 32px;background:rgba(0,0,0,.92);border:2px solid #fc0;border-radius:14px;max-width:85vw;line-height:1.5}
-  #hud{position:absolute;top:14px;left:0;width:100%;display:flex;justify-content:space-between;padding:0 18px;pointer-events:none}
-  .hud-box{background:rgba(10,8,30,.78);border:2px solid rgba(255,204,0,.6);border-radius:10px;padding:7px 14px;color:#fc0;font-weight:700;font-size:14px;letter-spacing:1px;box-shadow:0 4px 14px rgba(0,0,0,.5)}
-  .panel{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(160deg,rgba(30,12,60,.96),rgba(8,4,24,.98));border:2px solid rgba(255,204,0,.65);border-radius:18px;padding:30px 40px;text-align:center;color:#fff;max-width:90vw;max-height:92vh;overflow-y:auto;pointer-events:auto;box-shadow:0 0 60px rgba(255,204,0,.25),0 20px 60px rgba(0,0,0,.7)}
-  .hidden{display:none!important}
-  .title{font-size:38px;font-weight:900;color:#fc0;text-shadow:0 4px 0 #7a3b00,0 8px 30px rgba(255,204,0,.5);letter-spacing:2px;margin-bottom:2px;line-height:1.1}
-  .title-pink{color:#ff6fd8;text-shadow:0 4px 0 #6b1a5e,0 8px 30px rgba(255,111,216,.5)}
-  .subtitle{color:#9a8ad0;font-size:12px;letter-spacing:5px;margin-bottom:22px;text-transform:uppercase}
-  .btn{display:block;width:260px;margin:10px auto;padding:13px 18px;font-family:inherit;font-size:17px;font-weight:800;color:#1a0a30;background:linear-gradient(180deg,#ffe066,#ffcc00 55%,#e6a800);border:none;border-radius:12px;cursor:pointer;letter-spacing:2px;box-shadow:0 6px 0 #8a5a00,0 10px 24px rgba(255,204,0,.3);transition:transform .1s,filter .1s}
-  .btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
-  .btn:active{transform:translateY(5px);box-shadow:0 1px 0 #8a5a00}
-  .btn-pink{background:linear-gradient(180deg,#ff9fe0,#ff6fd8 55%,#c93a9e);box-shadow:0 6px 0 #7a1f6e,0 10px 24px rgba(255,111,216,.3)}
-  .btn-pink:active{box-shadow:0 1px 0 #7a1f6e}
-  .instructions{color:#b8b0e0;font-size:12px;margin-top:16px;line-height:1.8}
-  .instructions kbd{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:5px;padding:2px 7px;font-family:inherit;font-size:11px;color:#fc0}
-  .big-msg{font-size:32px;font-weight:900;margin-bottom:10px;letter-spacing:2px}
-  .gold{color:#fc0;text-shadow:0 4px 0 #7a3b00}
-  .red{color:#ff4d6d;text-shadow:0 4px 0 #6b0018}
-  .green{color:#00e676;text-shadow:0 4px 0 #005c2e}
-  .small-msg{color:#c9c0f0;font-size:15px;margin-bottom:16px;line-height:1.5}
-  #controls{position:absolute;bottom:18px;left:0;width:100%;display:none;justify-content:space-between;padding:0 18px;pointer-events:none}
-  #controls.active{display:flex}
-  .group{display:flex;gap:12px}
-  .ctrl-btn{pointer-events:auto;width:62px;height:62px;background:rgba(255,204,0,.2);border:2px solid rgba(255,204,0,.6);border-radius:50%;color:#fc0;font-size:22px;display:flex;align-items:center;justify-content:center;user-select:none;touch-action:none}
-  .ctrl-btn:active{background:rgba(255,204,0,.5)}
-  @media(max-height:600px){.panel{padding:18px 22px}.title{font-size:26px}.subtitle{font-size:9px;margin-bottom:12px;letter-spacing:3px}.btn{padding:9px 14px;font-size:14px;margin:6px auto;width:210px}.instructions{font-size:10px;margin-top:10px}.big-msg{font-size:22px}.small-msg{font-size:13px}.hud-box{font-size:11px;padding:4px 9px}.ctrl-btn{width:50px;height:50px;font-size:17px}}
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body {
+    width:100%; height:100%; overflow:hidden;
+    background:#0d0221;
+    font-family: 'Courier New', monospace;
+  }
+  #gameContainer {
+    position:relative;
+    width:100vw; height:100vw; max-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    background: radial-gradient(circle at 50% 30%, #1a0a3a 0%, #0d0221 100%);
+  }
+  #canvasWrap {
+    position:relative;
+    width:100vw; height:100vh;
+    display:flex; align-items:center; justify-content:center;
+  }
+  canvas {
+    display:block;
+    width:100%; height:100%;
+  }
+  #overlay {
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    pointer-events:none;
+    z-index:10;
+  }
+  .hidden { display:none !important; }
+  .panel {
+    pointer-events:all;
+    background: linear-gradient(180deg, rgba(43,16,85,0.95) 0%, rgba(13,2,33,0.95) 100%);
+    border:6px solid #ffcc00;
+    border-radius:12px;
+    padding:32px 40px;
+    text-align:center;
+    box-shadow: 0 0 40px rgba(255,204,0,0.4), inset 0 0 30px rgba(255,204,0,0.1);
+    color:#fff;
+    max-width:88%;
+    max-height:88%;
+    overflow-y:auto;
+  }
+  .title {
+    font-size:38px;
+    color:#ffcc00;
+    text-shadow: 3px 3px 0 #b34700, 6px 6px 0 rgba(0,0,0,0.4);
+    letter-spacing:2px;
+    margin-bottom:6px;
+  }
+  .subtitle {
+    color:#ff6fd8;
+    font-size:14px;
+    letter-spacing:4px;
+    margin-bottom:26px;
+  }
+  .menuBtn {
+    display:block;
+    width:280px;
+    margin:14px auto;
+    padding:14px 20px;
+    font-family:'Courier New', monospace;
+    font-size:20px;
+    font-weight:bold;
+    color:#2b1055;
+    background: linear-gradient(180deg,#ffe066 0%, #ffcc00 100%);
+    border:4px solid #b34700;
+    border-radius:8px;
+    cursor:pointer;
+    letter-spacing:2px;
+    transition: transform 0.08s ease, filter 0.08s ease;
+    box-shadow: 0 5px 0 #b34700;
+  }
+  .menuBtn:hover { filter:brightness(1.1); }
+  .menuBtn:active { transform:translateY(4px); box-shadow:0 1px 0 #b34700; }
+  .menuBtn.secondary {
+    background: linear-gradient(180deg,#ff9fe0 0%, #ff6fd8 100%);
+    border-color:#7a1f6e;
+    box-shadow: 0 5px 0 #7a1f6e;
+    color:#2b1055;
+  }
+  .instructions {
+    color:#c9c9ff;
+    font-size:13px;
+    margin-top:18px;
+    line-height:1.6;
+  }
+  .bigMsg {
+    font-size:36px;
+    color:#ffcc00;
+    text-shadow: 3px 3px 0 #b34700;
+    margin-bottom:14px;
+  }
+  .smallMsg {
+    color:#fff;
+    font-size:16px;
+    margin-bottom:20px;
+  }
+  #hud {
+    position:absolute;
+    top:16px; left:0; width:100%;
+    display:flex; justify-content:space-between;
+    padding:0 24px;
+    pointer-events:none;
+    z-index:5;
+  }
+  .hudBox {
+    background:rgba(13,2,33,0.8);
+    border:3px solid #ffcc00;
+    border-radius:8px;
+    padding:8px 16px;
+    color:#ffcc00;
+    font-size:18px;
+    font-weight:bold;
+    letter-spacing:1px;
+    text-shadow:2px 2px 0 #000;
+  }
+  #mobileControls {
+    position:absolute;
+    bottom:20px; left:0; width:100%;
+    display:none;
+    justify-content:space-between;
+    padding:0 20px;
+    pointer-events:none;
+    z-index:6;
+  }
+  #mobileControls.active { display:flex; }
+  .mBtn {
+    pointer-events:all;
+    width:64px; height:64px;
+    background:rgba(255,204,0,0.35);
+    border:3px solid #ffcc00;
+    border-radius:50%;
+    color:#fff;
+    font-size:26px;
+    display:flex; align-items:center; justify-content:center;
+    user-select:none; touch-action:none;
+  }
+  .mGroup { display:flex; gap:14px; }
+  #creditNote {
+    position:absolute; bottom:6px; width:100%; text-align:center;
+    color:#5c4a8c; font-size:11px; pointer-events:none; z-index:5;
+  }
 </style>
+<!-- Three.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-<canvas id="game"></canvas>
-<div id="ui">
+<div id="gameContainer">
+ <div id="canvasWrap">
   <div id="hud" class="hidden">
-    <div class="hud-box" id="hud-level">FASE 1</div>
-    <div class="hud-box">❤ <span id="hud-lives">3</span></div>
-    <div class="hud-box">◆ <span id="hud-score">0</span></div>
+    <div class="hudBox" id="hudLevel">FASE 1</div>
+    <div class="hudBox" id="hudLives">❤ x3</div>
+    <div class="hudBox" id="hudScore">PONTOS: 0</div>
   </div>
 
-  <div id="menu" class="panel">
-    <div class="title">BROZING</div>
-    <div class="title title-pink">ADVENTURES 3D</div>
-    <div class="subtitle">Uma nova dimensão</div>
-    <button class="btn" id="btn-play">▶ JOGAR</button>
-    <div class="instructions">
-      <kbd>A</kbd> <kbd>D</kbd> mover · <kbd>Espaço</kbd>/<kbd>W</kbd> pular<br>
-      Pule em cima dos inimigos · Colete os cristais
+  <div id="mobileControls">
+    <div class="mGroup">
+      <div class="mBtn" id="btnLeft">◀</div>
+      <div class="mBtn" id="btnRight">▶</div>
+    </div>
+    <div class="mGroup">
+      <div class="mBtn" id="btnUp">▲</div>
+      <div class="mBtn" id="btnDown">▼</div>
+    </div>
+    <div class="mBtn" id="btnJump">⮱</div>
+  </div>
+
+  <div id="overlay">
+    <!-- MAIN MENU -->
+    <div class="panel" id="menuPanel">
+      <div class="title">BROZING ADVENTURES</div>
+      <div class="subtitle">— 3 D &nbsp; E D I T I O N —</div>
+      <button class="menuBtn" id="btnPlay">▶ JOGAR 3D</button>
+      <div class="instructions">
+        W, A, S, D / Setas para mover em 3D (X e Z)<br>
+        Espaço para pular · Esmague os inimigos de escritório!
+      </div>
+    </div>
+
+    <!-- LEVEL INTRO -->
+    <div class="panel hidden" id="introPanel">
+      <div class="bigMsg" id="introTitle">FASE 1</div>
+      <div class="smallMsg" id="introText">Bem-vindo ao mundo tridimensional!</div>
+      <button class="menuBtn" id="btnStartLevel">COMEÇAR</button>
+    </div>
+
+    <!-- GAME OVER -->
+    <div class="panel hidden" id="gameOverPanel">
+      <div class="bigMsg" style="color:#ff4d6d;">FIM DE JOGO</div>
+      <div class="smallMsg" id="gameOverScore">Pontuação: 0</div>
+      <button class="menuBtn" id="btnRetry">TENTAR NOVAMENTE</button>
+      <button class="menuBtn secondary" id="btnToMenu">MENU PRINCIPAL</button>
+    </div>
+
+    <!-- VICTORY -->
+    <div class="panel hidden" id="victoryPanel">
+      <div class="bigMsg" style="color:#00e676;">VITÓRIA 3D!</div>
+      <div class="smallMsg" id="victoryText">Você completou todas as 4 fases em 3D!</div>
+      <div class="smallMsg" id="victoryScore">Pontuação final: 0</div>
+      <button class="menuBtn" id="btnPlayAgain">JOGAR NOVAMENTE</button>
+      <button class="menuBtn secondary" id="btnVictoryMenu">MENU PRINCIPAL</button>
     </div>
   </div>
-
-  <div id="intro" class="panel hidden">
-    <div class="big-msg gold" id="intro-title">FASE 1</div>
-    <div class="small-msg" id="intro-sub">Pomar Digital</div>
-    <button class="btn" id="btn-start">COMEÇAR</button>
-  </div>
-
-  <div id="gameover" class="panel hidden">
-    <div class="big-msg red">FIM DE JOGO</div>
-    <div class="small-msg">Pontuação: <span id="go-score">0</span></div>
-    <button class="btn" id="btn-retry">TENTAR NOVAMENTE</button>
-    <button class="btn btn-pink" id="btn-menu-go">MENU</button>
-  </div>
-
-  <div id="victory" class="panel hidden">
-    <div class="big-msg green">VITÓRIA!</div>
-    <div class="small-msg">Você completou as 3 fases!</div>
-    <div class="small-msg">Pontuação final: <span id="vic-score">0</span></div>
-    <button class="btn" id="btn-again">JOGAR NOVAMENTE</button>
-    <button class="btn btn-pink" id="btn-menu-vic">MENU</button>
-  </div>
-
-  <div id="controls">
-    <div class="group">
-      <div class="ctrl-btn" id="ctrl-left">◀</div>
-      <div class="ctrl-btn" id="ctrl-right">▶</div>
-    </div>
-    <div class="ctrl-btn" id="ctrl-jump">▲</div>
-  </div>
+ </div>
+  <div id="creditNote">Brozing Adventures 3D · Three.js WebGL Engine</div>
 </div>
-<div id="loading">Carregando Three.js...</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-(function () {
-  'use strict';
+(function(){
+"use strict";
 
-  var loading = document.getElementById('loading');
+// --- SETUP THREE.JS SCENE ---
+const container = document.getElementById('canvasWrap');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0d0221);
+scene.fog = new THREE.FogExp2(0x0d0221, 0.015);
 
-  // Global safety net
-  window.addEventListener('error', function (e) {
-    if (loading && loading.style.display !== 'none') {
-      loading.innerHTML = '❌ Erro: ' + (e.message || 'desconhecido');
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+container.insertBefore(renderer.domElement, container.firstChild);
+
+window.addEventListener('resize', ()=>{
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// --- ILUMINAÇÃO DINÂMICA 3D ---
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+scene.add(ambientLight);
+
+const dirLight = new THREE.DirectionalLight(0xfff5cc, 1.2);
+dirLight.position.set(20, 40, 20);
+dirLight.castShadow = true;
+dirLight.shadow.mapSize.width = 2048;
+dirLight.shadow.mapSize.height = 2048;
+dirLight.shadow.camera.near = 0.5;
+dirLight.shadow.camera.far = 150;
+const d = 30;
+dirLight.shadow.camera.left = -d;
+dirLight.shadow.camera.right = d;
+dirLight.shadow.camera.top = d;
+dirLight.shadow.camera.bottom = -d;
+scene.add(dirLight);
+
+// --- VARIÁVEis DE JOGO ---
+const GRAVITY = 0.45;
+const JUMP_FORCE = 11;
+let score = 0, lives = 3, currentLevelIndex = 0;
+let gameRunning = false;
+let player, levels = [], currentLevel = null;
+let particles = [];
+let keys = {};
+let touchLeft=false, touchRight=false, touchUp=false, touchDown=false, touchJump=false;
+
+window.addEventListener('keydown', e=>{
+  keys[e.code] = true;
+  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code)) e.preventDefault();
+});
+window.addEventListener('keyup', e=>{ keys[e.code] = false; });
+
+// Controles Mobile
+function bindHold(el, onDown, onUp){
+  el.addEventListener('touchstart', e=>{ e.preventDefault(); onDown(); }, {passive:false});
+  el.addEventListener('touchend', e=>{ e.preventDefault(); onUp(); }, {passive:false});
+  el.addEventListener('mousedown', e=>{ e.preventDefault(); onDown(); });
+  el.addEventListener('mouseup', e=>{ e.preventDefault(); onUp(); });
+}
+bindHold(document.getElementById('btnLeft'), ()=>touchLeft=true, ()=>touchLeft=false);
+bindHold(document.getElementById('btnRight'), ()=>touchRight=true, ()=>touchRight=false);
+bindHold(document.getElementById('btnUp'), ()=>touchUp=true, ()=>touchUp=false);
+bindHold(document.getElementById('btnDown'), ()=>touchDown=true, ()=>touchDown=false);
+bindHold(document.getElementById('btnJump'), ()=>touchJump=true, ()=>touchJump=false);
+if('ontouchstart' in window) document.getElementById('mobileControls').classList.add('active');
+
+// --- CRIAÇÃO DOS ELEMENTOS 3D (MESHES) ---
+function createPlayerMesh(){
+  const group = new THREE.Group();
+  
+  // Corpo (Azul estilizado)
+  const bodyGeo = new THREE.BoxGeometry(1.2, 1.6, 0.8);
+  const bodyMat = new THREE.MeshStandardMaterial({ color: 0x2b5fce, roughness: 0.3 });
+  const body = new THREE.Mesh(bodyGeo, bodyMat);
+  body.position.y = 0.8;
+  body.castShadow = true;
+  group.add(body);
+
+  // Cabeça
+  const headGeo = new THREE.BoxGeometry(1.0, 1.0, 1.0);
+  const headMat = new THREE.MeshStandardMaterial({ color: 0xffd7a8 });
+  const head = new THREE.Mesh(headGeo, headMat);
+  head.position.y = 2.1;
+  head.castShadow = true;
+  group.add(head);
+
+  // Boné Amarelo
+  const capGeo = new THREE.BoxGeometry(1.1, 0.3, 1.2);
+  const capMat = new THREE.MeshStandardMaterial({ color: 0xffd93d });
+  const cap = new THREE.Mesh(capGeo, capMat);
+  cap.position.set(0, 2.7, 0.1);
+  group.add(cap);
+
+  group.traverse(child => { child.castShadow = true; child.receiveShadow = true; });
+  return group;
+}
+
+function createCoinMesh(){
+  const group = new THREE.Group();
+  const coinGeo = new THREE.CylinderGeometry(0.6, 0.6, 0.18, 24);
+  const coinMat = new THREE.MeshStandardMaterial({ color: 0xffd93d, metalness: 0.8, roughness: 0.2 });
+  const mesh = new THREE.Mesh(coinGeo, coinMat);
+  mesh.rotation.x = Math.PI / 2;
+  mesh.castShadow = true;
+  group.add(mesh);
+  return group;
+}
+
+function createEnemyMesh(type){
+  const group = new THREE.Group();
+  if(type === 'apple'){
+    const geo = new THREE.SphereGeometry(0.9, 16, 16);
+    const mat = new THREE.MeshStandardMaterial({ color: 0xe0201f, roughness: 0.3 });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.y = 0.9;
+    group.add(mesh);
+  } else if(type === 'pear'){
+    const geo = new THREE.ConeGeometry(0.8, 1.8, 16);
+    const mat = new THREE.MeshStandardMaterial({ color: 0xb7d63a, roughness: 0.4 });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.y = 0.9;
+    group.add(mesh);
+  } else if(type === 'speaker'){
+    const geo = new THREE.BoxGeometry(1.4, 1.4, 1.4);
+    const mat = new THREE.MeshStandardMaterial({ color: 0x2c2c34, roughness: 0.5 });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.y = 0.7;
+    group.add(mesh);
+  } else { // robô
+    const geo = new THREE.CylinderGeometry(0.7, 0.7, 1.8, 16);
+    const mat = new THREE.MeshStandardMaterial({ color: 0x8e44ad, roughness: 0.4 });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.y = 0.9;
+    group.add(mesh);
+  }
+  group.traverse(c => c.castShadow = true);
+  return group;
+}
+
+// --- LEVEL DESIGN (4 FASES 3D) ---
+function buildLevels(){
+  levels = [
+    {
+      name: "FASE 1 — POMAR 3D",
+      introText: "Salte entre as plataformas flutuantes e colete as moedas douradas!",
+      theme: 0x0d0221,
+      platforms: [
+        {x:0, y:0, z:0, w:8, h:1, d:8, color:0x4a9c4a},
+        {x:0, y:1.5, z:-12, w:6, h:1, d:6, color:0x4a9c4a},
+        {x:-6, y:3.0, z:-24, w:5, h:1, d:5, color:0x4a9c4a},
+        {x:4, y:4.5, z:-36, w:6, h:1, d:6, color:0x4a9c4a},
+        {x:0, y:6.0, z:-48, w:10, h:1, d:8, color:0x2e7d32} // Meta
+      ],
+      enemies: [
+        {type:'apple', x:0, y:2, z:-12, minZ:-15, maxZ:-9, speed:0.06},
+        {type:'pear', x:4, y:5, z:-36, minX:2, maxX:6, speed:0.05}
+      ],
+      coins: [
+        {x:0, y:2.5, z:-12}, {x:-6, y:4.0, z:-24}, {x:4, y:5.5, z:-36}, {x:-2, y:7.0, z:-46}, {x:2, y:7.0, z:-46}
+      ]
+    },
+    {
+      name: "FASE 2 — LABIRINTO SUSPENSO",
+      introText: "Caminhos estreitos em 3D. Cuidado para não cair no vazio!",
+      theme: 0x1a0a2a,
+      platforms: [
+        {x:0, y:0, z:0, w:6, h:1, d:6, color:0x8e44ad},
+        {x:0, y:2.0, z:-10, w:4, h:1, d:8, color:0x9b59b6},
+        {x:-5, y:3.5, z:-20, w:4, h:1, d:4, color:0x9b59b6},
+        {x:5, y:4.5, z:-28, w:4, h:1, d:4, color:0x9b59b6},
+        {x:0, y:6.0, z:-38, w:8, h:1, d:8, color:0x6c3483}
+      ],
+      enemies: [
+        {type:'apple', x:0, y:3, z:-10, minZ:-13, maxZ:-7, speed:0.08},
+        {type:'pear', x:5, y:5.5, z:-28, minZ:-31, maxZ:-25, speed:0.07}
+      ],
+      coins: [
+        {x:0, y:3.0, z:-10}, {x:-5, y:4.5, z:-20}, {x:5, y:5.5, z:-28}, {x:0, y:7.2, z:-36}, {x:2, y:7.2, z:-38}
+      ]
+    },
+    {
+      name: "FASE 3 — CIDADELA DIGITAL",
+      introText: "Robôs de escritório e caixas de som hostis bloqueiam o caminho!",
+      theme: 0x051026,
+      platforms: [
+        {x:0, y:0, z:0, w:7, h:1, d:7, color:0x2980b9},
+        {x:4, y:1.8, z:-10, w:4, h:1, d:4, color:0x3498db},
+        {x:-4, y:3.2, z:-20, w:5, h:1, d:5, color:0x3498db},
+        {x:0, y:4.8, z:-30, w:4, h:1, d:6, color:0x3498db},
+        {x:0, y:6.5, z:-42, w:9, h:1, d:8, color:0x1f618d}
+      ],
+      enemies: [
+        {type:'speaker', x:4, y:2.8, z:-10, minX:2, maxX:6, speed:0.07},
+        {type:'rob', x:-4, y:4.2, z:-20, minZ:-23, maxZ:-17, speed:0.09}
+      ],
+      coins: [
+        {x:4, y:2.8, z:-10}, {x:-4, y:4.2, z:-20}, {x:0, y:5.8, z:-30}, {x:-2, y:7.6, z:-40}, {x:2, y:7.6, z:-40}
+      ]
+    },
+    {
+      name: "FASE 4 — O PICO FINAL",
+      introText: "Desafio máximo! Salto preciso sobre plataformas distantes.",
+      theme: 0x260510,
+      platforms: [
+        {x:0, y:0, z:0, w:6, h:1, d:6, color:0xc0392b},
+        {x:-5, y:2.0, z:-12, w:3, h:1, d:3, color:0xe74c3c},
+        {x:5, y:3.8, z:-22, w:3, h:1, d:3, color:0xe74c3c},
+        {x:0, y:5.5, z:-32, w:4, h:1, d:4, color:0xe74c3c},
+        {x:0, y:7.5, z:-45, w:10, h:1, d:10, color:0x962d22}
+      ],
+      enemies: [
+        {type:'speaker', x:-5, y:3.0, z:-12, minZ:-14, maxZ:-10, speed:0.1},
+        {type:'apple', x:5, y:4.8, z:-22, minX:3, maxX:7, speed:0.09},
+        {type:'rob', x:0, y:6.5, z:-32, minZ:-34, maxZ:-30, speed:0.11}
+      ],
+      coins: [
+        {x:-5, y:3.0, z:-12}, {x:5, y:4.8, z:-22}, {x:0, y:6.5, z:-32}, {x:-2, y:8.8, z:-43}, {x:2, y:8.8, z:-43}
+      ]
+    }
+  ];
+}
+
+// --- GESTÃO DE ESTADOS E TELAS ---
+const menuPanel = document.getElementById('menuPanel');
+const introPanel = document.getElementById('introPanel');
+const gameOverPanel = document.getElementById('gameOverPanel');
+const victoryPanel = document.getElementById('victoryPanel');
+const hud = document.getElementById('hud');
+const hudLevel = document.getElementById('hudLevel');
+const hudLives = document.getElementById('hudLives');
+const hudScore = document.getElementById('hudScore');
+
+function showPanel(panel){
+  [menuPanel, introPanel, gameOverPanel, victoryPanel].forEach(p => p.classList.add('hidden'));
+  if(panel) panel.classList.remove('hidden');
+}
+
+document.getElementById('btnPlay').addEventListener('click', ()=>{
+  score = 0; lives = 3;
+  buildLevels();
+  loadLevel(0);
+});
+
+document.getElementById('btnStartLevel').addEventListener('click', ()=>{
+  showPanel(null);
+  hud.classList.remove('hidden');
+  gameRunning = true;
+});
+
+document.getElementById('btnRetry').addEventListener('click', ()=>{
+  lives = 3;
+  loadLevel(currentLevelIndex);
+});
+
+document.getElementById('btnToMenu').addEventListener('click', ()=>{
+  gameRunning = false;
+  showPanel(menuPanel);
+  hud.classList.add('hidden');
+});
+
+document.getElementById('btnPlayAgain').addEventListener('click', ()=>{
+  score = 0; lives = 3;
+  buildLevels();
+  loadLevel(0);
+});
+
+document.getElementById('btnVictoryMenu').addEventListener('click', ()=>{
+  gameRunning = false;
+  showPanel(menuPanel);
+  hud.classList.add('hidden');
+});
+
+let sceneObjects = [];
+function clearSceneObjects(){
+  sceneObjects.forEach(obj => scene.remove(obj));
+  sceneObjects = [];
+}
+
+function loadLevel(index){
+  currentLevelIndex = index;
+  currentLevel = levels[index];
+  clearSceneObjects();
+
+  scene.background.setHex(currentLevel.theme);
+  scene.fog.color.setHex(currentLevel.theme);
+
+  // Criar Jogador
+  if(!player){
+    player = {
+      mesh: createPlayerMesh(),
+      x: 0, y: 1.5, z: 0,
+      vx: 0, vy: 0, vz: 0,
+      radius: 0.6,
+      onGround: false
+    };
+    scene.add(player.mesh);
+  } else {
+    player.x = 0; player.y = 1.5; player.z = 0;
+    player.vx = 0; player.vy = 0; player.vz = 0;
+  }
+
+  // Criar Plataformas 3D
+  currentLevel.platMeshes = [];
+  currentLevel.platforms.forEach(p => {
+    const geo = new THREE.BoxGeometry(p.w, p.h, p.d);
+    const mat = new THREE.MeshStandardMaterial({ color: p.color, roughness: 0.4 });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(p.x, p.y - p.h/2, p.z);
+    mesh.receiveShadow = true;
+    mesh.castShadow = true;
+    scene.add(mesh);
+    sceneObjects.push(mesh);
+    p.mesh = mesh;
+  });
+
+  // Criar Inimigos 3D
+  currentLevel.enemyMeshes = [];
+  currentLevel.enemies.forEach(e => {
+    const m = createEnemyMesh(e.type);
+    m.position.set(e.x, e.y, e.z);
+    scene.add(m);
+    sceneObjects.push(m);
+    e.mesh = m;
+    e.dir = 1;
+  });
+
+  // Criar Moedas 3D
+  currentLevel.coinMeshes = [];
+  currentLevel.coins.forEach(c => {
+    const m = createCoinMesh();
+    m.position.set(c.x, c.y, c.z);
+    scene.add(m);
+    sceneObjects.push(m);
+    c.mesh = m;
+    c.collected = false;
+  });
+
+  // Criar Portal / Bandeira de Meta na última plataforma
+  const lastPlat = currentLevel.platforms[currentLevel.platforms.length - 1];
+  const goalGeo = new THREE.CylinderGeometry(0.2, 0.2, 3, 12);
+  const goalMat = new THREE.MeshStandardMaterial({ color: 0x00e676 });
+  const goalMesh = new THREE.Mesh(goalGeo, goalMat);
+  goalMesh.position.set(lastPlat.x, lastPlat.y + 1.5, lastPlat.z);
+  scene.add(goalMesh);
+  sceneObjects.push(goalMesh);
+  currentLevel.goalMesh = goalMesh;
+
+  hudLevel.textContent = currentLevel.name.split('—')[0].trim();
+  updateHud();
+
+  document.getElementById('introTitle').textContent = currentLevel.name;
+  document.getElementById('introText').textContent = currentLevel.introText;
+  showPanel(introPanel);
+  hud.classList.add('hidden');
+  gameRunning = false;
+}
+
+function updateHud(){
+  hudLives.textContent = '❤ x' + lives;
+  hudScore.textContent = 'PONTOS: ' + score;
+}
+
+// --- LOOP DE FÍSICA E JOGO 3D ---
+function spawnParticles(x, y, z, color){
+  for(let i=0; i<8; i++){
+    const geo = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+    const mat = new THREE.MeshBasicMaterial({ color: color });
+    const p = new THREE.Mesh(geo, mat);
+    p.position.set(x, y, z);
+    scene.add(p);
+    particles.push({
+      mesh: p,
+      vx: (Math.random()-0.5)*0.3,
+      vy: Math.random()*0.3,
+      vz: (Math.random()-0.5)*0.3,
+      life: 30
+    });
+  }
+}
+
+function updateGame(){
+  if(!gameRunning) return;
+
+  // Movimentação 3D (X e Z)
+  let moveX = 0, moveZ = 0;
+  const speed = 0.12;
+  if(keys['ArrowLeft'] || keys['KeyA'] || touchLeft) moveX -= speed;
+  if(keys['ArrowRight'] || keys['KeyD'] || touchRight) moveX += speed;
+  if(keys['ArrowUp'] || keys['KeyW'] || touchUp) moveZ -= speed;
+  if(keys['ArrowDown'] || keys['KeyS'] || touchDown) moveZ += speed;
+
+  player.x += moveX;
+  player.z += moveZ;
+
+  // Pulo e Gravidade (Y)
+  const jumpKey = keys['ArrowUp'] || keys['Space'] || keys['KeyW'] || touchJump;
+  if(jumpKey && player.onGround){
+    player.vy = JUMP_FORCE;
+    player.onGround = false;
+  }
+
+  player.vy -= GRAVITY;
+  player.y += player.vy * 0.05;
+
+  // Colisão com Plataformas 3D
+  player.onGround = false;
+  currentLevel.platforms.forEach(p => {
+    const pMinX = p.x - p.w/2, pMaxX = p.x + p.w/2;
+    const pMinZ = p.z - p.d/2, pMaxZ = p.z + p.d/2;
+    const pTop = p.y;
+
+    if(player.x + player.radius > pMinX && player.x - player.radius < pMaxX &&
+       player.z + player.radius > pMinZ && player.z - player.radius < pMaxZ){
+      // Aterrissagem no topo
+      if(player.y <= pTop && player.y >= pTop - 0.6 && player.vy <= 0){
+        player.y = pTop;
+        player.vy = 0;
+        player.onGround = true;
+      }
     }
   });
 
-  if (typeof THREE === 'undefined' || !THREE.WebGLRenderer) {
-    loading.innerHTML = '❌ Falha ao carregar Three.js.<br>Verifique a internet e recarregue.';
-    return;
+  // Queda no vazio
+  if(player.y < -10){
+    loseLife();
   }
 
-  try {
-    // ============================================================
-    // CONFIG
-    // ============================================================
-    var GRAVITY = -30;
-    var JUMP_VEL = 13;
-    var MOVE_SPEED = 8;
-    var MOVE_ACCEL = 65;
-    var FRICTION = 0.82;
-    var PW = 0.6, PH = 1.6;
-    var COYOTE = 0.1, JBUF = 0.12, INVULN = 1.5;
-    var KILL_Y = -15;
+  // Atualizar Posição Mesh Jogador
+  player.mesh.position.set(player.x, player.y, player.z);
+  if(moveX !== 0 || moveZ !== 0){
+    player.mesh.rotation.y = Math.atan2(moveX, moveZ);
+  }
 
-    // ============================================================
-    // LEVELS — 3 phases
-    // ============================================================
-    var LEVELS = [
-      {
-        name: 'POMAR DIGITAL',
-        theme: { sky: 0x87ceeb, fog: 0xa8d8ff, ground: 0x4a9c4a, grass: 0x5cb85c, plat: 0xb87a3f },
-        startX: -30, startY: 1.3, goalX: 60,
-        platforms: [
-          { x: -30, y: 0,   w: 20, h: 1,   d: 6 },
-          { x: -15, y: 2.5, w: 4,  h: 0.5, d: 4 },
-          { x: -5,  y: 4.5, w: 4,  h: 0.5, d: 4 },
-          { x: 5,   y: 2.5, w: 4,  h: 0.5, d: 4 },
-          { x: 17,  y: 0,   w: 14, h: 1,   d: 6 },
-          { x: 30,  y: 3,   w: 4,  h: 0.5, d: 4 },
-          { x: 40,  y: 5.5, w: 4,  h: 0.5, d: 4 },
-          { x: 50,  y: 3,   w: 4,  h: 0.5, d: 4 },
-          { x: 60,  y: 0,   w: 14, h: 1,   d: 6 }
-        ],
-        coins: [
-          { x: -15, y: 4 }, { x: -5, y: 6 }, { x: 5, y: 4 },
-          { x: 30, y: 4.5 }, { x: 40, y: 7 }, { x: 50, y: 4.5 },
-          { x: 17, y: 3 }, { x: 60, y: 3 }
-        ],
-        enemies: [
-          { x: 17, y: 0.9, minX: 11, maxX: 23, speed: 2.5, type: 'apple' },
-          { x: 60, y: 0.9, minX: 54, maxX: 66, speed: 2.2, type: 'pear' }
-        ]
-      },
-      {
-        name: 'VINHEDO CÓSMICO',
-        theme: { sky: 0xff8a65, fog: 0xffab91, ground: 0xc2634a, grass: 0xd97860, plat: 0xc98a4b },
-        startX: -30, startY: 1.3, goalX: 68,
-        platforms: [
-          { x: -30, y: 0,   w: 18, h: 1,   d: 6 },
-          { x: -16, y: 3,   w: 4,  h: 0.5, d: 4 },
-          { x: -6,  y: 5.5, w: 4,  h: 0.5, d: 4 },
-          { x: 4,   y: 3,   w: 4,  h: 0.5, d: 4 },
-          { x: 16,  y: 0,   w: 14, h: 1,   d: 6 },
-          { x: 30,  y: 4,   w: 4,  h: 0.5, d: 4 },
-          { x: 42,  y: 6.5, w: 4,  h: 0.5, d: 4 },
-          { x: 54,  y: 3,   w: 4,  h: 0.5, d: 4 },
-          { x: 68,  y: 0,   w: 14, h: 1,   d: 6 }
-        ],
-        coins: [
-          { x: -16, y: 4.5 }, { x: -6, y: 7 }, { x: 4, y: 4.5 },
-          { x: 30, y: 5.5 }, { x: 42, y: 8 }, { x: 54, y: 4.5 },
-          { x: 16, y: 3 }, { x: 68, y: 3 }
-        ],
-        enemies: [
-          { x: 16, y: 0.9, minX: 10, maxX: 22, speed: 2.8, type: 'grape' },
-          { x: 68, y: 0.9, minX: 62, maxX: 74, speed: 2.5, type: 'apple' }
-        ]
-      },
-      {
-        name: 'CIBERESCRITÓRIO',
-        theme: { sky: 0x0d0221, fog: 0x1a0a3a, ground: 0x2a1a5a, grass: 0x3a2a7a, plat: 0x5a3a8a },
-        startX: -30, startY: 1.3, goalX: 76,
-        platforms: [
-          { x: -30, y: 0,   w: 18, h: 1,   d: 6 },
-          { x: -14, y: 3,   w: 4,  h: 0.5, d: 4 },
-          { x: -4,  y: 6,   w: 4,  h: 0.5, d: 4 },
-          { x: 6,   y: 3,   w: 4,  h: 0.5, d: 4 },
-          { x: 18,  y: 0,   w: 14, h: 1,   d: 6 },
-          { x: 33,  y: 4,   w: 4,  h: 0.5, d: 4 },
-          { x: 45,  y: 7,   w: 4,  h: 0.5, d: 4 },
-          { x: 56,  y: 4,   w: 4,  h: 0.5, d: 4 },
-          { x: 76,  y: 0,   w: 18, h: 1,   d: 6 }
-        ],
-        coins: [
-          { x: -14, y: 4.5 }, { x: -4, y: 7.5 }, { x: 6, y: 4.5 },
-          { x: 33, y: 5.5 }, { x: 45, y: 8.5 }, { x: 56, y: 5.5 },
-          { x: 18, y: 3 }, { x: 76, y: 3 }
-        ],
-        enemies: [
-          { x: 18, y: 0.9, minX: 12, maxX: 24, speed: 3.0, type: 'mouse' },
-          { x: 76, y: 0.9, minX: 68, maxX: 84, speed: 3.2, type: 'keyboard' }
-        ]
-      }
-    ];
-
-    // ============================================================
-    // THREE.JS SETUP
-    // ============================================================
-    var canvas = document.getElementById('game');
-    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, powerPreference: 'high-performance' });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-    var scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x87ceeb);
-
-    var camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 300);
-    camera.position.set(-30, 4, 12);
-
-    // Lights
-    var ambient = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambient);
-
-    var hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.5);
-    scene.add(hemi);
-
-    var dir = new THREE.DirectionalLight(0xfff5e0, 1.2);
-    dir.position.set(15, 30, 15);
-    dir.castShadow = true;
-    dir.shadow.mapSize.width = 2048;
-    dir.shadow.mapSize.height = 2048;
-    dir.shadow.camera.left = -40;
-    dir.shadow.camera.right = 40;
-    dir.shadow.camera.top = 40;
-    dir.shadow.camera.bottom = -40;
-    dir.shadow.camera.near = 1;
-    dir.shadow.camera.far = 100;
-    dir.shadow.bias = -0.0005;
-    scene.add(dir);
-    scene.add(dir.target);
-
-    // ============================================================
-    // HELPERS
-    // ============================================================
-    function makeMat(color, opts) {
-      opts = opts || {};
-      return new THREE.MeshStandardMaterial({
-        color: color,
-        roughness: opts.roughness !== undefined ? opts.roughness : 0.6,
-        metalness: opts.metalness || 0,
-        emissive: opts.emissive || 0x000000,
-        emissiveIntensity: opts.emissiveIntensity || 0
-      });
+  // Atualizar Inimigos 3D
+  currentLevel.enemies.forEach(e => {
+    if(e.minX !== undefined){
+      e.x += e.speed * e.dir;
+      if(e.x < e.minX || e.x > e.maxX) e.dir *= -1;
+    } else if(e.minZ !== undefined){
+      e.z += e.speed * e.dir;
+      if(e.z < e.minZ || e.z > e.maxZ) e.dir *= -1;
     }
+    e.mesh.position.set(e.x, e.y, e.z);
 
-    // ============================================================
-    // PLAYER MESH  (spans -0.8 to +0.8 in Y)
-    // ============================================================
-    function createPlayerMesh() {
-      var g = new THREE.Group();
-      var legMat = makeMat(0x2b5fce);
-      var bodyMat = makeMat(0xe63946);
-      var skinMat = makeMat(0xffd7a8);
-      var capMat = makeMat(0xffd93d);
-
-      var legL = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.8, 0.35), legMat);
-      legL.position.set(-0.15, -0.4, 0);
-      legL.castShadow = true;
-      g.add(legL);
-
-      var legR = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.8, 0.35), legMat);
-      legR.position.set(0.15, -0.4, 0);
-      legR.castShadow = true;
-      g.add(legR);
-
-      var body = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.5, 0.42), bodyMat);
-      body.position.set(0, 0.15, 0);
-      body.castShadow = true;
-      g.add(body);
-
-      var head = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.3, 0.42), skinMat);
-      head.position.set(0, 0.55, 0);
-      head.castShadow = true;
-      g.add(head);
-
-      var cap = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.1, 0.48), capMat);
-      cap.position.set(0, 0.75, 0);
-      cap.castShadow = true;
-      g.add(cap);
-
-      var eyeMat = makeMat(0x1a1a1a);
-      var eyeL = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.09, 0.05), eyeMat);
-      eyeL.position.set(-0.11, 0.6, 0.22);
-      g.add(eyeL);
-
-      var eyeR = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.09, 0.05), eyeMat);
-      eyeR.position.set(0.11, 0.6, 0.22);
-      g.add(eyeR);
-
-      g.userData = { legL: legL, legR: legR };
-      return g;
-    }
-
-    // ============================================================
-    // ENEMY MESHES
-    // ============================================================
-    function createEnemyMesh(type) {
-      var g = new THREE.Group();
-
-      if (type === 'apple') {
-        var bodyA = new THREE.Mesh(new THREE.SphereGeometry(0.4, 16, 12), makeMat(0xe0201f, { roughness: 0.4 }));
-        bodyA.position.y = 0.4;
-        bodyA.castShadow = true;
-        g.add(bodyA);
-        var stemA = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.15, 6), makeMat(0x4a2a1a));
-        stemA.position.y = 0.85;
-        g.add(stemA);
-        var eyeWA = makeMat(0xffffff);
-        var eAL = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 6), eyeWA);
-        eAL.position.set(-0.12, 0.5, 0.35);
-        g.add(eAL);
-        var eAR = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 6), eyeWA);
-        eAR.position.set(0.12, 0.5, 0.35);
-        g.add(eAR);
-        var pupA = makeMat(0x000000);
-        var pAL = new THREE.Mesh(new THREE.SphereGeometry(0.035, 6, 4), pupA);
-        pAL.position.set(-0.12, 0.5, 0.4);
-        g.add(pAL);
-        var pAR = new THREE.Mesh(new THREE.SphereGeometry(0.035, 6, 4), pupA);
-        pAR.position.set(0.12, 0.5, 0.4);
-        g.add(pAR);
-      } else if (type === 'grape') {
-        var grapeMat = makeMat(0x7a3fc2, { roughness: 0.4, metalness: 0.1 });
-        var pts = [[0,0.6,0],[0.15,0.45,0],[-0.15,0.45,0],[0,0.35,0],[0.1,0.2,0],[-0.1,0.2,0],[0,0.1,0]];
-        for (var i = 0; i < pts.length; i++) {
-          var s = new THREE.Mesh(new THREE.SphereGeometry(0.15, 10, 8), grapeMat);
-          s.position.set(pts[i][0], pts[i][1], pts[i][2]);
-          s.castShadow = true;
-          g.add(s);
-        }
-        var eyeWG = makeMat(0xffffff);
-        var eGL = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 6), eyeWG);
-        eGL.position.set(-0.1, 0.5, 0.2);
-        g.add(eGL);
-        var eGR = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 6), eyeWG);
-        eGR.position.set(0.1, 0.5, 0.2);
-        g.add(eGR);
+    // Colisão Jogador vs Inimigo
+    const dist = Math.hypot(player.x - e.x, player.z - e.z);
+    if(dist < 1.0 && Math.abs(player.y - e.y) < 1.2){
+      if(player.vy < 0 && player.y > e.y){
+        // Esmagar inimigo
+        scene.remove(e.mesh);
+        currentLevel.enemies = currentLevel.enemies.filter(item => item !== e);
+        player.vy = JUMP_FORCE * 0.7;
+        score += 100;
+        spawnParticles(e.x, e.y, e.z, 0xffd93d);
+        updateHud();
       } else {
-        var col = type === 'pear' ? 0xb7d63a : (type === 'keyboard' ? 0x2c2c34 : 0xd8d8e0);
-        var body = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.55, 0.7), makeMat(col, { roughness: 0.5 }));
-        body.position.y = 0.4;
-        body.castShadow = true;
-        g.add(body);
-        var eyeMat = makeMat(0xff3344, { emissive: 0xaa0022, emissiveIntensity: 0.5 });
-        var eL = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.08, 0.05), eyeMat);
-        eL.position.set(-0.15, 0.5, 0.36);
-        g.add(eL);
-        var eR = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.08, 0.05), eyeMat);
-        eR.position.set(0.15, 0.5, 0.36);
-        g.add(eR);
+        loseLife();
       }
-      return g;
     }
+  });
 
-    // ============================================================
-    // COIN MESH
-    // ============================================================
-    function createCoinMesh() {
-      var mesh = new THREE.Mesh(
-        new THREE.IcosahedronGeometry(0.32, 0),
-        makeMat(0xffcc00, { metalness: 0.85, roughness: 0.2, emissive: 0x553300, emissiveIntensity: 0.5 })
-      );
-      mesh.castShadow = true;
-      return mesh;
+  // Atualizar Moedas 3D
+  currentLevel.coins.forEach(c => {
+    if(c.collected) return;
+    c.mesh.rotation.z += 0.04;
+    const dist = Math.hypot(player.x - c.x, player.z - c.z);
+    if(dist < 1.0 && Math.abs(player.y - c.y) < 1.5){
+      c.collected = true;
+      scene.remove(c.mesh);
+      score += 25;
+      spawnParticles(c.x, c.y, c.z, 0xffe066);
+      updateHud();
     }
+  });
 
-    // ============================================================
-    // GOAL MESH
-    // ============================================================
-    function createGoalMesh() {
-      var g = new THREE.Group();
-      var pole = new THREE.Mesh(new THREE.BoxGeometry(0.15, 4, 0.15), makeMat(0x999999, { metalness: 0.6, roughness: 0.4 }));
-      pole.position.y = 2;
-      pole.castShadow = true;
-      g.add(pole);
-      var flag = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.7, 0.06), makeMat(0x00e676, { emissive: 0x004411, emissiveIntensity: 0.4 }));
-      flag.position.set(0.65, 3.3, 0);
-      flag.castShadow = true;
-      g.add(flag);
-      var ball = new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 8), makeMat(0xffcc00, { metalness: 0.8, roughness: 0.2 }));
-      ball.position.y = 4.05;
-      g.add(ball);
-      return g;
+  // Verificar Meta / Vitória de Fase
+  const lastPlat = currentLevel.platforms[currentLevel.platforms.length - 1];
+  if(Math.hypot(player.x - lastPlat.x, player.z - lastPlat.z) < 1.5 && Math.abs(player.y - lastPlat.y) < 1.0){
+    nextLevel();
+  }
+
+  // Atualizar Partículas
+  for(let i = particles.length - 1; i >= 0; i--){
+    const p = particles[i];
+    p.mesh.position.x += p.vx;
+    p.mesh.position.y += p.vy;
+    p.mesh.position.z += p.vz;
+    p.life--;
+    if(p.life <= 0){
+      scene.remove(p.mesh);
+      particles.splice(i, 1);
     }
+  }
 
-    // ============================================================
-    // GAME STATE
-    // ============================================================
-    var state = 'menu'; // menu | intro | playing | gameover | victory
-    var score = 0;
-    var lives = 3;
-    var currentLevel = 0;
+  // Câmera Dinâmica 3D em Terceira Pessoa
+  camera.position.x += (player.x - camera.position.x) * 0.1;
+  camera.position.y += (player.y + 4 - camera.position.y) * 0.1;
+  camera.position.z += (player.z + 8 - camera.position.z) * 0.1;
+  camera.lookAt(player.x, player.y + 1, player.z);
+}
 
-    var levelRoot = null;
-    var playerMesh = null;
-    var goalMesh = null;
-    var solids = [];
-    var coins = [];
-    var enemies = [];
-    var particles = [];
-    var goal = null;
+function loseLife(){
+  lives--;
+  updateHud();
+  spawnParticles(player.x, player.y, player.z, 0xff4d6d);
+  if(lives <= 0){
+    gameRunning = false;
+    document.getElementById('gameOverScore').textContent = 'Pontuação: ' + score;
+    showPanel(gameOverPanel);
+    hud.classList.add('hidden');
+  } else {
+    player.x = 0; player.y = 3; player.z = 0;
+    player.vx = 0; player.vy = 0; player.vz = 0;
+  }
+}
 
-    var player = {
-      x: 0, y: 0, z: 0,
-      vx: 0, vy: 0,
-      onGround: false,
-      coyote: 0,
-      facing: 1,
-      walkPhase: 0,
-      invuln: 0
-    };
+function nextLevel(){
+  gameRunning = false;
+  if(currentLevelIndex < levels.length - 1){
+    score += 200;
+    updateHud();
+    loadLevel(currentLevelIndex + 1);
+  } else {
+    score += 500;
+    document.getElementById('victoryScore').textContent = 'Pontuação final: ' + score;
+    showPanel(victoryPanel);
+    hud.classList.add('hidden');
+  }
+}
 
-    var input = { left: false, right: false, jumpBuf: 0 };
+// --- LOOP PRINCIPAL ---
+function animate(){
+  requestAnimationFrame(animate);
+  updateGame();
+  renderer.render(scene, camera);
+}
+animate();
 
-    // ============================================================
-    // CLEAR / BUILD LEVEL
-    // ============================================================
-    function clearLevel() {
-      if (levelRoot) {
-        scene.remove(levelRoot);
-        levelRoot.traverse(function (o) {
-          if (o.geometry) o.geometry.dispose();
-          if (o.material) {
-            if (Array.isArray(o.material)) o.material.forEach(function (m) { m.dispose(); });
-            else o.material.dispose();
-          }
-        });
-      }
-      levelRoot = new THREE.Group();
-      scene.add(levelRoot);
+showPanel(menuPanel);
 
-      if (playerMesh) {
-        scene.remove(playerMesh);
-        playerMesh.traverse(function (o) {
-          if (o.geometry) o.geometry.dispose();
-          if (o.material) o.material.dispose();
-        });
-        playerMesh = null;
-      }
-
-      // Clean particles
-      for (var i = 0; i < particles.length; i++) {
-        scene.remove(particles[i].mesh);
-        particles[i].mesh.geometry.dispose();
-        particles[i].mesh.material.dispose();
-      }
-      particles = [];
-
-      solids = [];
-      coins = [];
-      enemies = [];
-      goal = null;
-    }
-
-    function buildLevel(index) {
-      clearLevel();
-      var lvl = LEVELS[index];
-
-      scene.background = new THREE.Color(lvl.theme.sky);
-      scene.fog = new THREE.Fog(lvl.theme.fog, 30, 80);
-      hemi.color = new THREE.Color(lvl.theme.sky);
-      hemi.groundColor = new THREE.Color(lvl.theme.ground);
-      dir.target.position.set(lvl.startX + 20, 0, 0);
-
-      var i, p, mp, c, e;
-
-      // Platforms
-      for (i = 0; i < lvl.platforms.length; i++) {
-        p = lvl.platforms[i];
-        var isGround = p.h > 0.7;
-        var mat = makeMat(isGround ? lvl.theme.ground : lvl.theme.plat, { roughness: 0.75 });
-        var mesh = new THREE.Mesh(new THREE.BoxGeometry(p.w, p.h, p.d), mat);
-        mesh.position.set(p.x, p.y, 0);
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        levelRoot.add(mesh);
-
-        if (isGround) {
-          var grass = new THREE.Mesh(
-            new THREE.BoxGeometry(p.w + 0.02, 0.12, p.d + 0.02),
-            makeMat(lvl.theme.grass, { roughness: 0.8 })
-          );
-          grass.position.set(p.x, p.y + p.h / 2, 0);
-          grass.receiveShadow = true;
-          levelRoot.add(grass);
-        }
-
-        solids.push({ x: p.x, y: p.y, w: p.w, h: p.h });
-      }
-
-      // Coins
-      for (
+})();
+</script>
+</body>
+</html>
