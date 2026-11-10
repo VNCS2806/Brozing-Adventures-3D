@@ -178,8 +178,9 @@
       <div class="subtitle">— 3 D &nbsp; E D I T I O N —</div>
       <button class="menuBtn" id="btnPlay">▶ JOGAR 3D</button>
       <div class="instructions">
-        W, A, S, D / Setas para mover em 3D (X e Z)<br>
-        Espaço para pular · Esmague os inimigos de escritório!
+        W / Seta Acima = Frente | S / Seta Abaixo = Trás<br>
+        A / D = Lados | Setas Esq / Dir = Girar Câmera<br>
+        Barra de Espaço = Pular
       </div>
     </div>
 
@@ -215,7 +216,6 @@
 (function(){
 "use strict";
 
-// --- SETUP THREE.JS SCENE ---
 const container = document.getElementById('canvasWrap');
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0d0221);
@@ -234,7 +234,6 @@ window.addEventListener('resize', ()=>{
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// --- ILUMINAÇÃO DINÂMICA 3D ---
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
 scene.add(ambientLight);
 
@@ -252,7 +251,6 @@ dirLight.shadow.camera.top = d;
 dirLight.shadow.camera.bottom = -d;
 scene.add(dirLight);
 
-// --- VARIÁVEis DE JOGO ---
 const GRAVITY = 0.45;
 const JUMP_FORCE = 11;
 let score = 0, lives = 3, currentLevelIndex = 0;
@@ -262,13 +260,16 @@ let particles = [];
 let keys = {};
 let touchLeft=false, touchRight=false, touchUp=false, touchDown=false, touchJump=false;
 
+let cameraYaw = 0;
+const cameraPitch = 0.35;
+const cameraDist = 9.0;
+
 window.addEventListener('keydown', e=>{
   keys[e.code] = true;
   if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code)) e.preventDefault();
 });
 window.addEventListener('keyup', e=>{ keys[e.code] = false; });
 
-// Controles Mobile
 function bindHold(el, onDown, onUp){
   el.addEventListener('touchstart', e=>{ e.preventDefault(); onDown(); }, {passive:false});
   el.addEventListener('touchend', e=>{ e.preventDefault(); onUp(); }, {passive:false});
@@ -282,11 +283,8 @@ bindHold(document.getElementById('btnDown'), ()=>touchDown=true, ()=>touchDown=f
 bindHold(document.getElementById('btnJump'), ()=>touchJump=true, ()=>touchJump=false);
 if('ontouchstart' in window) document.getElementById('mobileControls').classList.add('active');
 
-// --- CRIAÇÃO DOS ELEMENTOS 3D (MESHES) ---
 function createPlayerMesh(){
   const group = new THREE.Group();
-  
-  // Corpo (Azul estilizado)
   const bodyGeo = new THREE.BoxGeometry(1.2, 1.6, 0.8);
   const bodyMat = new THREE.MeshStandardMaterial({ color: 0x2b5fce, roughness: 0.3 });
   const body = new THREE.Mesh(bodyGeo, bodyMat);
@@ -294,7 +292,6 @@ function createPlayerMesh(){
   body.castShadow = true;
   group.add(body);
 
-  // Cabeça
   const headGeo = new THREE.BoxGeometry(1.0, 1.0, 1.0);
   const headMat = new THREE.MeshStandardMaterial({ color: 0xffd7a8 });
   const head = new THREE.Mesh(headGeo, headMat);
@@ -302,7 +299,6 @@ function createPlayerMesh(){
   head.castShadow = true;
   group.add(head);
 
-  // Boné Amarelo
   const capGeo = new THREE.BoxGeometry(1.1, 0.3, 1.2);
   const capMat = new THREE.MeshStandardMaterial({ color: 0xffd93d });
   const cap = new THREE.Mesh(capGeo, capMat);
@@ -344,7 +340,7 @@ function createEnemyMesh(type){
     const mesh = new THREE.Mesh(geo, mat);
     mesh.position.y = 0.7;
     group.add(mesh);
-  } else { // robô
+  } else {
     const geo = new THREE.CylinderGeometry(0.7, 0.7, 1.8, 16);
     const mat = new THREE.MeshStandardMaterial({ color: 0x8e44ad, roughness: 0.4 });
     const mesh = new THREE.Mesh(geo, mat);
@@ -355,19 +351,18 @@ function createEnemyMesh(type){
   return group;
 }
 
-// --- LEVEL DESIGN (4 FASES 3D) ---
 function buildLevels(){
   levels = [
     {
       name: "FASE 1 — POMAR 3D",
-      introText: "Salte entre as plataformas flutuantes e colete as moedas douradas!",
+      introText: "Use W/Seta Cima (Frente) e S/Seta Baixo (Trás). Setas Esquerda/Direita giram a câmera!",
       theme: 0x0d0221,
       platforms: [
         {x:0, y:0, z:0, w:8, h:1, d:8, color:0x4a9c4a},
         {x:0, y:1.5, z:-12, w:6, h:1, d:6, color:0x4a9c4a},
         {x:-6, y:3.0, z:-24, w:5, h:1, d:5, color:0x4a9c4a},
         {x:4, y:4.5, z:-36, w:6, h:1, d:6, color:0x4a9c4a},
-        {x:0, y:6.0, z:-48, w:10, h:1, d:8, color:0x2e7d32} // Meta
+        {x:0, y:6.0, z:-48, w:10, h:1, d:8, color:0x2e7d32}
       ],
       enemies: [
         {type:'apple', x:0, y:2, z:-12, minZ:-15, maxZ:-9, speed:0.06},
@@ -438,7 +433,6 @@ function buildLevels(){
   ];
 }
 
-// --- GESTÃO DE ESTADOS E TELAS ---
 const menuPanel = document.getElementById('menuPanel');
 const introPanel = document.getElementById('introPanel');
 const gameOverPanel = document.getElementById('gameOverPanel');
@@ -501,8 +495,8 @@ function loadLevel(index){
 
   scene.background.setHex(currentLevel.theme);
   scene.fog.color.setHex(currentLevel.theme);
+  cameraYaw = 0;
 
-  // Criar Jogador
   if(!player){
     player = {
       mesh: createPlayerMesh(),
@@ -517,8 +511,6 @@ function loadLevel(index){
     player.vx = 0; player.vy = 0; player.vz = 0;
   }
 
-  // Criar Plataformas 3D
-  currentLevel.platMeshes = [];
   currentLevel.platforms.forEach(p => {
     const geo = new THREE.BoxGeometry(p.w, p.h, p.d);
     const mat = new THREE.MeshStandardMaterial({ color: p.color, roughness: 0.4 });
@@ -531,8 +523,6 @@ function loadLevel(index){
     p.mesh = mesh;
   });
 
-  // Criar Inimigos 3D
-  currentLevel.enemyMeshes = [];
   currentLevel.enemies.forEach(e => {
     const m = createEnemyMesh(e.type);
     m.position.set(e.x, e.y, e.z);
@@ -542,8 +532,6 @@ function loadLevel(index){
     e.dir = 1;
   });
 
-  // Criar Moedas 3D
-  currentLevel.coinMeshes = [];
   currentLevel.coins.forEach(c => {
     const m = createCoinMesh();
     m.position.set(c.x, c.y, c.z);
@@ -553,7 +541,6 @@ function loadLevel(index){
     c.collected = false;
   });
 
-  // Criar Portal / Bandeira de Meta na última plataforma
   const lastPlat = currentLevel.platforms[currentLevel.platforms.length - 1];
   const goalGeo = new THREE.CylinderGeometry(0.2, 0.2, 3, 12);
   const goalMat = new THREE.MeshStandardMaterial({ color: 0x00e676 });
@@ -561,7 +548,6 @@ function loadLevel(index){
   goalMesh.position.set(lastPlat.x, lastPlat.y + 1.5, lastPlat.z);
   scene.add(goalMesh);
   sceneObjects.push(goalMesh);
-  currentLevel.goalMesh = goalMesh;
 
   hudLevel.textContent = currentLevel.name.split('—')[0].trim();
   updateHud();
@@ -578,7 +564,6 @@ function updateHud(){
   hudScore.textContent = 'PONTOS: ' + score;
 }
 
-// --- LOOP DE FÍSICA E JOGO 3D ---
 function spawnParticles(x, y, z, color){
   for(let i=0; i<8; i++){
     const geo = new THREE.BoxGeometry(0.2, 0.2, 0.2);
@@ -599,19 +584,31 @@ function spawnParticles(x, y, z, color){
 function updateGame(){
   if(!gameRunning) return;
 
-  // Movimentação 3D (X e Z)
-  let moveX = 0, moveZ = 0;
+  // Câmera controlada exclusivamente pelas Setas Esquerda / Direita
+  const camRotateSpeed = 0.035;
+  if(keys['ArrowLeft']) cameraYaw += camRotateSpeed;
+  if(keys['ArrowRight']) cameraYaw -= camRotateSpeed;
+
+  // Movimento: W ou Seta Acima = Frente; S ou Seta Abaixo = Trás
+  let inputForward = 0, inputRight = 0;
   const speed = 0.12;
-  if(keys['ArrowLeft'] || keys['KeyA'] || touchLeft) moveX -= speed;
-  if(keys['ArrowRight'] || keys['KeyD'] || touchRight) moveX += speed;
-  if(keys['ArrowUp'] || keys['KeyW'] || touchUp) moveZ -= speed;
-  if(keys['ArrowDown'] || keys['KeyS'] || touchDown) moveZ += speed;
+
+  if(keys['KeyW'] || keys['ArrowUp'] || touchUp) inputForward += speed;
+  if(keys['KeyS'] || keys['ArrowDown'] || touchDown) inputForward -= speed;
+  if(keys['KeyA'] || touchLeft) inputRight -= speed;
+  if(keys['KeyD'] || touchRight) inputRight += speed;
+
+  const sinY = Math.sin(cameraYaw);
+  const cosY = Math.cos(cameraYaw);
+
+  const moveX = (inputRight * cosY) - (inputForward * sinY);
+  const moveZ = (-inputRight * sinY) - (inputForward * cosY);
 
   player.x += moveX;
   player.z += moveZ;
 
-  // Pulo e Gravidade (Y)
-  const jumpKey = keys['ArrowUp'] || keys['Space'] || keys['KeyW'] || touchJump;
+  // Pulo isolado apenas na Barra de Espaço
+  const jumpKey = keys['Space'] || touchJump;
   if(jumpKey && player.onGround){
     player.vy = JUMP_FORCE;
     player.onGround = false;
@@ -620,7 +617,6 @@ function updateGame(){
   player.vy -= GRAVITY;
   player.y += player.vy * 0.05;
 
-  // Colisão com Plataformas 3D
   player.onGround = false;
   currentLevel.platforms.forEach(p => {
     const pMinX = p.x - p.w/2, pMaxX = p.x + p.w/2;
@@ -629,7 +625,6 @@ function updateGame(){
 
     if(player.x + player.radius > pMinX && player.x - player.radius < pMaxX &&
        player.z + player.radius > pMinZ && player.z - player.radius < pMaxZ){
-      // Aterrissagem no topo
       if(player.y <= pTop && player.y >= pTop - 0.6 && player.vy <= 0){
         player.y = pTop;
         player.vy = 0;
@@ -638,18 +633,15 @@ function updateGame(){
     }
   });
 
-  // Queda no vazio
   if(player.y < -10){
     loseLife();
   }
 
-  // Atualizar Posição Mesh Jogador
   player.mesh.position.set(player.x, player.y, player.z);
   if(moveX !== 0 || moveZ !== 0){
     player.mesh.rotation.y = Math.atan2(moveX, moveZ);
   }
 
-  // Atualizar Inimigos 3D
   currentLevel.enemies.forEach(e => {
     if(e.minX !== undefined){
       e.x += e.speed * e.dir;
@@ -660,11 +652,9 @@ function updateGame(){
     }
     e.mesh.position.set(e.x, e.y, e.z);
 
-    // Colisão Jogador vs Inimigo
     const dist = Math.hypot(player.x - e.x, player.z - e.z);
     if(dist < 1.0 && Math.abs(player.y - e.y) < 1.2){
       if(player.vy < 0 && player.y > e.y){
-        // Esmagar inimigo
         scene.remove(e.mesh);
         currentLevel.enemies = currentLevel.enemies.filter(item => item !== e);
         player.vy = JUMP_FORCE * 0.7;
@@ -677,7 +667,6 @@ function updateGame(){
     }
   });
 
-  // Atualizar Moedas 3D
   currentLevel.coins.forEach(c => {
     if(c.collected) return;
     c.mesh.rotation.z += 0.04;
@@ -691,13 +680,11 @@ function updateGame(){
     }
   });
 
-  // Verificar Meta / Vitória de Fase
   const lastPlat = currentLevel.platforms[currentLevel.platforms.length - 1];
   if(Math.hypot(player.x - lastPlat.x, player.z - lastPlat.z) < 1.5 && Math.abs(player.y - lastPlat.y) < 1.0){
     nextLevel();
   }
 
-  // Atualizar Partículas
   for(let i = particles.length - 1; i >= 0; i--){
     const p = particles[i];
     p.mesh.position.x += p.vx;
@@ -710,11 +697,12 @@ function updateGame(){
     }
   }
 
-  // Câmera Dinâmica 3D em Terceira Pessoa
-  camera.position.x += (player.x - camera.position.x) * 0.1;
-  camera.position.y += (player.y + 4 - camera.position.y) * 0.1;
-  camera.position.z += (player.z + 8 - camera.position.z) * 0.1;
-  camera.lookAt(player.x, player.y + 1, player.z);
+  const camX = player.x + cameraDist * Math.sin(cameraYaw) * Math.cos(cameraPitch);
+  const camY = player.y + 1.2 + cameraDist * Math.sin(cameraPitch);
+  const camZ = player.z + cameraDist * Math.cos(cameraYaw) * Math.cos(cameraPitch);
+
+  camera.position.set(camX, camY, camZ);
+  camera.lookAt(player.x, player.y + 1.0, player.z);
 }
 
 function loseLife(){
@@ -746,7 +734,6 @@ function nextLevel(){
   }
 }
 
-// --- LOOP PRINCIPAL ---
 function animate(){
   requestAnimationFrame(animate);
   updateGame();
