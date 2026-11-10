@@ -13,7 +13,7 @@
   }
   #gameContainer {
     position:relative;
-    width:100vw; height:100vw; max-height:100vh;
+    width:100vw; height:100vh;
     display:flex; align-items:center; justify-content:center;
     background: radial-gradient(circle at 50% 30%, #1a0a3a 0%, #0d0221 100%);
   }
@@ -147,7 +147,7 @@
     color:#5c4a8c; font-size:11px; pointer-events:none; z-index:5;
   }
 </style>
-<!-- Three.js CDN -->
+<!-- Three.js CDN Seguro -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
@@ -178,8 +178,8 @@
       <div class="subtitle">— 3 D &nbsp; E D I T I O N —</div>
       <button class="menuBtn" id="btnPlay">▶ JOGAR 3D</button>
       <div class="instructions">
-        W / Seta Acima = Frente | S / Seta Abaixo = Trás<br>
-        A / D = Lados | Setas Esq / Dir = Girar Câmera<br>
+        W = Frente | S = Trás | A / D = Lados<br>
+        Setas Esquerda / Direita = Girar Câmera<br>
         Barra de Espaço = Pular
       </div>
     </div>
@@ -264,9 +264,10 @@ let cameraYaw = 0;
 const cameraPitch = 0.35;
 const cameraDist = 9.0;
 
+// Captura robusta de teclado global
 window.addEventListener('keydown', e=>{
   keys[e.code] = true;
-  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code)) e.preventDefault();
+  if(['Space','ArrowLeft','ArrowRight'].includes(e.code)) e.preventDefault();
 });
 window.addEventListener('keyup', e=>{ keys[e.code] = false; });
 
@@ -355,7 +356,7 @@ function buildLevels(){
   levels = [
     {
       name: "FASE 1 — POMAR 3D",
-      introText: "Use W/Seta Cima (Frente) e S/Seta Baixo (Trás). Setas Esquerda/Direita giram a câmera!",
+      introText: "Use W (Frente), S (Trás), A/D (Lados). Setas Esquerda/Direita giram a câmera!",
       theme: 0x0d0221,
       platforms: [
         {x:0, y:0, z:0, w:8, h:1, d:8, color:0x4a9c4a},
@@ -584,17 +585,17 @@ function spawnParticles(x, y, z, color){
 function updateGame(){
   if(!gameRunning) return;
 
-  // Câmera controlada exclusivamente pelas Setas Esquerda / Direita
+  // Câmera órbita controlada exclusivamente pelas setas Esquerda / Direita
   const camRotateSpeed = 0.035;
   if(keys['ArrowLeft']) cameraYaw += camRotateSpeed;
   if(keys['ArrowRight']) cameraYaw -= camRotateSpeed;
 
-  // Movimento: W ou Seta Acima = Frente; S ou Seta Abaixo = Trás
+  // W = Frente, S = Trás, A/D = Lados (Setas Baixo/Cima totalmente ignoradas no movimento)
   let inputForward = 0, inputRight = 0;
   const speed = 0.12;
 
-  if(keys['KeyW'] || keys['ArrowUp'] || touchUp) inputForward += speed;
-  if(keys['KeyS'] || keys['ArrowDown'] || touchDown) inputForward -= speed;
+  if(keys['KeyW'] || touchUp) inputForward += speed;
+  if(keys['KeyS'] || touchDown) inputForward -= speed;
   if(keys['KeyA'] || touchLeft) inputRight -= speed;
   if(keys['KeyD'] || touchRight) inputRight += speed;
 
@@ -607,7 +608,7 @@ function updateGame(){
   player.x += moveX;
   player.z += moveZ;
 
-  // Pulo isolado apenas na Barra de Espaço
+  // Pulo apenas na Barra de Espaço
   const jumpKey = keys['Space'] || touchJump;
   if(jumpKey && player.onGround){
     player.vy = JUMP_FORCE;
