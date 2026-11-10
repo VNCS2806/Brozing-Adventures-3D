@@ -147,7 +147,7 @@
     color:#5c4a8c; font-size:11px; pointer-events:none; z-index:5;
   }
 </style>
-<!-- Three.js CDN Seguro -->
+<!-- Three.js CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
@@ -187,7 +187,7 @@
     <!-- LEVEL INTRO -->
     <div class="panel hidden" id="introPanel">
       <div class="bigMsg" id="introTitle">FASE 1</div>
-      <div class="smallMsg" id="introText">Bem-vindo ao mundo tridimensional!</div>
+      <div class="smallMsg" id="introText">Plataformas balanceadas para saltos perfeitos!</div>
       <button class="menuBtn" id="btnStartLevel">COMEÇAR</button>
     </div>
 
@@ -202,7 +202,7 @@
     <!-- VICTORY -->
     <div class="panel hidden" id="victoryPanel">
       <div class="bigMsg" style="color:#00e676;">VITÓRIA 3D!</div>
-      <div class="smallMsg" id="victoryText">Você completou todas as 4 fases em 3D!</div>
+      <div class="smallMsg" id="victoryText">Você completou todas as 4 fases com sucesso!</div>
       <div class="smallMsg" id="victoryScore">Pontuação final: 0</div>
       <button class="menuBtn" id="btnPlayAgain">JOGAR NOVAMENTE</button>
       <button class="menuBtn secondary" id="btnVictoryMenu">MENU PRINCIPAL</button>
@@ -351,83 +351,81 @@ function createEnemyMesh(type){
   return group;
 }
 
+// LEVEL DESIGN BALANCEADO (Pulos confortáveis e acessíveis)
 function buildLevels(){
   levels = [
     {
       name: "FASE 1 — POMAR 3D",
-      introText: "Use W/Seta Acima (Frente) e S/Seta Baixo (Trás). Setas Esquerda/Direita giram a câmera!",
+      introText: "Salte suavemente entre as plataformas e colete as moedas!",
       theme: 0x0d0221,
       platforms: [
         {x:0, y:0, z:0, w:8, h:1, d:8, color:0x4a9c4a},
-        {x:0, y:1.5, z:-12, w:6, h:1, d:6, color:0x4a9c4a},
-        {x:-6, y:3.0, z:-24, w:5, h:1, d:5, color:0x4a9c4a},
-        {x:4, y:4.5, z:-36, w:6, h:1, d:6, color:0x4a9c4a},
-        {x:0, y:6.0, z:-48, w:10, h:1, d:8, color:0x2e7d32}
+        {x:0, y:1.0, z:-8, w:6, h:1, d:6, color:0x4a9c4a},
+        {x:0, y:2.0, z:-16, w:6, h:1, d:6, color:0x4a9c4a},
+        {x:0, y:3.0, z:-24, w:6, h:1, d:6, color:0x4a9c4a},
+        {x:0, y:4.0, z:-32, w:8, h:1, d:8, color:0x2e7d32}
       ],
       enemies: [
-        {type:'apple', x:0, y:2, z:-12, minZ:-15, maxZ:-9, speed:0.06},
-        {type:'pear', x:4, y:5, z:-36, minX:2, maxX:6, speed:0.05}
+        {type:'apple', x:0, y:2, z:-16, minZ:-18, maxZ:-14, speed:0.05}
       ],
       coins: [
-        {x:0, y:2.5, z:-12}, {x:-6, y:4.0, z:-24}, {x:4, y:5.5, z:-36}, {x:-2, y:7.0, z:-46}, {x:2, y:7.0, z:-46}
+        {x:0, y:1.8, z:-8}, {x:0, y:2.8, z:-16}, {x:0, y:3.8, z:-24}, {x:0, y:5.0, z:-30}, {x:0, y:5.0, z:-34}
       ]
     },
     {
       name: "FASE 2 — LABIRINTO SUSPENSO",
-      introText: "Caminhos estreitos em 3D. Cuidado para não cair no vazio!",
+      introText: "Pequenos desvios em zigue-zague com total segurança.",
       theme: 0x1a0a2a,
       platforms: [
-        {x:0, y:0, z:0, w:6, h:1, d:6, color:0x8e44ad},
-        {x:0, y:2.0, z:-10, w:4, h:1, d:8, color:0x9b59b6},
-        {x:-5, y:3.5, z:-20, w:4, h:1, d:4, color:0x9b59b6},
-        {x:5, y:4.5, z:-28, w:4, h:1, d:4, color:0x9b59b6},
-        {x:0, y:6.0, z:-38, w:8, h:1, d:8, color:0x6c3483}
+        {x:0, y:0, z:0, w:7, h:1, d:7, color:0x8e44ad},
+        {x:4, y:1.2, z:-8, w:5, h:1, d:5, color:0x9b59b6},
+        {x:-4, y:2.4, z:-16, w:5, h:1, d:5, color:0x9b59b6},
+        {x:4, y:3.6, z:-24, w:5, h:1, d:5, color:0x9b59b6},
+        {x:0, y:4.8, z:-34, w:8, h:1, d:8, color:0x6c3483}
       ],
       enemies: [
-        {type:'apple', x:0, y:3, z:-10, minZ:-13, maxZ:-7, speed:0.08},
-        {type:'pear', x:5, y:5.5, z:-28, minZ:-31, maxZ:-25, speed:0.07}
+        {type:'pear', x:4, y:2.2, z:-16, minX:-6, maxX:6, speed:0.06}
       ],
       coins: [
-        {x:0, y:3.0, z:-10}, {x:-5, y:4.5, z:-20}, {x:5, y:5.5, z:-28}, {x:0, y:7.2, z:-36}, {x:2, y:7.2, z:-38}
+        {x:4, y:2.0, z:-8}, {x:-4, y:3.2, z:-16}, {x:4, y:4.4, z:-24}, {x:0, y:5.8, z:-32}, {x:0, y:5.8, z:-36}
       ]
     },
     {
       name: "FASE 3 — CIDADELA DIGITAL",
-      introText: "Robôs de escritório e caixas de som hostis bloqueiam o caminho!",
+      introText: "Cuidado com os obstáculos eletrônicos nas plataformas!",
       theme: 0x051026,
       platforms: [
-        {x:0, y:0, z:0, w:7, h:1, d:7, color:0x2980b9},
-        {x:4, y:1.8, z:-10, w:4, h:1, d:4, color:0x3498db},
-        {x:-4, y:3.2, z:-20, w:5, h:1, d:5, color:0x3498db},
-        {x:0, y:4.8, z:-30, w:4, h:1, d:6, color:0x3498db},
-        {x:0, y:6.5, z:-42, w:9, h:1, d:8, color:0x1f618d}
+        {x:0, y:0, z:0, w:8, h:1, d:8, color:0x2980b9},
+        {x:0, y:1.3, z:-9, w:6, h:1, d:6, color:0x3498db},
+        {x:0, y:2.6, z:-18, w:6, h:1, d:6, color:0x3498db},
+        {x:0, y:3.9, z:-27, w:6, h:1, d:6, color:0x3498db},
+        {x:0, y:5.2, z:-37, w:9, h:1, d:9, color:0x1f618d}
       ],
       enemies: [
-        {type:'speaker', x:4, y:2.8, z:-10, minX:2, maxX:6, speed:0.07},
-        {type:'rob', x:-4, y:4.2, z:-20, minZ:-23, maxZ:-17, speed:0.09}
+        {type:'speaker', x:0, y:2.3, z:-9, minZ:-11, maxZ:-7, speed:0.06},
+        {type:'rob', x:0, y:3.6, z:-18, minZ:-20, maxZ:-16, speed:0.07}
       ],
       coins: [
-        {x:4, y:2.8, z:-10}, {x:-4, y:4.2, z:-20}, {x:0, y:5.8, z:-30}, {x:-2, y:7.6, z:-40}, {x:2, y:7.6, z:-40}
+        {x:0, y:2.1, z:-9}, {x:0, y:3.4, z:-18}, {x:0, y:4.7, z:-27}, {x:-2, y:6.2, z:-35}, {x:2, y:6.2, z:-35}
       ]
     },
     {
       name: "FASE 4 — O PICO FINAL",
-      introText: "Desafio máximo! Salto preciso sobre plataformas distantes.",
+      introTest: "O último desafio! Salto final rumo à vitória.",
       theme: 0x260510,
       platforms: [
-        {x:0, y:0, z:0, w:6, h:1, d:6, color:0xc0392b},
-        {x:-5, y:2.0, z:-12, w:3, h:1, d:3, color:0xe74c3c},
-        {x:5, y:3.8, z:-22, w:3, h:1, d:3, color:0xe74c3c},
-        {x:0, y:5.5, z:-32, w:4, h:1, d:4, color:0xe74c3c},
-        {x:0, y:7.5, z:-45, w:10, h:1, d:10, color:0x962d22}
+        {x:0, y:0, z:0, w:8, h:1, d:8, color:0xc0392b},
+        {x:-3, y:1.4, z:-10, w:5, h:1, d:5, color:0xe74c3c},
+        {x:3, y:2.8, z:-20, w:5, h:1, d:5, color:0xe74c3c},
+        {x:0, y:4.2, z:-30, w:6, h:1, d:6, color:0xe74c3c},
+        {x:0, y:5.8, z:-42, w:10, h:1, d:10, color:0x962d22}
       ],
       enemies: [
-        {type:'speaker', x:-5, y:3.0, z:-12, minZ:-14, maxZ:-10, speed:0.1},
-        {type:'apple', x:5, y:4.8, z:-22, minX:3, maxX:7, speed:0.09},
-        {type:'rob', x:0, y:6.5, z:-32, minZ:-34, maxZ:-30, speed:0.11}
+        {type:'speaker', x:-3, y:2.4, z:-10, minX:-5, maxX:-1, speed:0.07},
+        {type:'apple', x:3, y:3.8, z:-20, minZ:-22, maxZ:-18, speed:0.08}
       ],
       coins: [
-        {x:-5, y:3.0, z:-12}, {x:5, y:4.8, z:-22}, {x:0, y:6.5, z:-32}, {x:-2, y:8.8, z:-43}, {x:2, y:8.8, z:-43}
+        {x:-3, y:2.2, z:-10}, {x:3, y:3.6, z:-20}, {x:0, y:5.0, z:-30}, {x:-2, y:6.8, z:-40}, {x:2, y:6.8, z:-40}
       ]
     }
   ];
@@ -584,12 +582,10 @@ function spawnParticles(x, y, z, color){
 function updateGame(){
   if(!gameRunning) return;
 
-  // Câmera controlada exclusivamente pelas Setas Esquerda / Direita
   const camRotateSpeed = 0.04;
   if(keys['ArrowLeft']) cameraYaw += camRotateSpeed;
   if(keys['ArrowRight']) cameraYaw -= camRotateSpeed;
 
-  // Movimento: W / Seta Cima = Frente | S / Seta Baixo = Trás | A / D = Lados
   let inputForward = 0, inputRight = 0;
   const speed = 0.12;
 
@@ -607,7 +603,6 @@ function updateGame(){
   player.x += moveX;
   player.z += moveZ;
 
-  // Pulo isolado estritamente na Barra de Espaço
   const jumpKey = keys['Space'] || touchJump;
   if(jumpKey && player.onGround){
     player.vy = JUMP_FORCE;
