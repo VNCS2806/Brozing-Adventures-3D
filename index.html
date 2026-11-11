@@ -180,14 +180,14 @@
       <div class="instructions">
         W / Seta Acima = Frente | S / Seta Baixo = Trás<br>
         A / D = Lados | Setas Esq / Dir = Girar Câmera<br>
-        Barra de Espaço = Pular (Pulos Extra Fáceis!)
+        Barra de Espaço = Pular (Pulos fáceis e obrigatórios!)
       </div>
     </div>
 
     <!-- LEVEL INTRO -->
     <div class="panel hidden" id="introPanel">
       <div class="bigMsg" id="introTitle">FASE 1</div>
-      <div class="smallMsg" id="introText">Plataformas unidas e super fáceis de atravessar!</div>
+      <div class="smallMsg" id="introText">Salto equilibrado: desafiador na medida certa!</div>
       <button class="menuBtn" id="btnStartLevel">COMEÇAR</button>
     </div>
 
@@ -202,7 +202,7 @@
     <!-- VICTORY -->
     <div class="panel hidden" id="victoryPanel">
       <div class="bigMsg" style="color:#00e676;">VITÓRIA 3D!</div>
-      <div class="smallMsg" id="victoryText">Parabéns! Você completou todas as fases com facilidade!</div>
+      <div class="smallMsg" id="victoryText">Parabéns! Você completou todas as fases com sucesso!</div>
       <div class="smallMsg" id="victoryScore">Pontuação final: 0</div>
       <button class="menuBtn" id="btnPlayAgain">JOGAR NOVAMENTE</button>
       <button class="menuBtn secondary" id="btnVictoryMenu">MENU PRINCIPAL</button>
@@ -251,9 +251,9 @@ dirLight.shadow.camera.top = d;
 dirLight.shadow.camera.bottom = -d;
 scene.add(dirLight);
 
-// FÍSICA APLICADA: Pulo extremamente generoso e gravidade suave
-const GRAVITY = 0.35;
-const JUMP_FORCE = 12.5;
+// FÍSICA BALANCEADA: Pulos confortáveis e seguros
+const GRAVITY = 0.40;
+const JUMP_FORCE = 11.5;
 let score = 0, lives = 3, currentLevelIndex = 0;
 let gameRunning = false;
 let player, levels = [], currentLevel = null;
@@ -352,79 +352,79 @@ function createEnemyMesh(type){
   return group;
 }
 
-// LEVEL DESIGN ULTRA FÁCIL: Plataformas largas, totalmente sobrepostas e sem abismos difíceis
+// LEVEL DESIGN BALANCEADO: Vãos fáceis de pular, degraus confortáveis e plataformas largas
 function buildLevels(){
   levels = [
     {
       name: "FASE 1 — POMAR 3D",
-      introText: "Caminho largo e totalmente seguro!",
+      introText: "Pulos fáceis e obrigatórios para avançar!",
       theme: 0x0d0221,
       platforms: [
-        {x:0, y:0, z:0, w:12, h:1, d:10, color:0x4a9c4a},
-        {x:0, y:0.4, z:-8, w:10, h:1, d:8, color:0x4a9c4a},
-        {x:0, y:0.8, z:-16, w:10, h:1, d:8, color:0x4a9c4a},
-        {x:0, y:1.2, z:-24, w:10, h:1, d:8, color:0x4a9c4a},
-        {x:0, y:1.6, z:-33, w:12, h:1, d:10, color:0x2e7d32}
+        {x:0, y:0, z:0, w:8, h:1, d:6, color:0x4a9c4a},
+        {x:0, y:0.8, z:-7, w:7, h:1, d:6, color:0x4a9c4a},
+        {x:0, y:1.6, z:-14, w:7, h:1, d:6, color:0x4a9c4a},
+        {x:0, y:2.4, z:-21, w:7, h:1, d:6, color:0x4a9c4a},
+        {x:0, y:3.2, z:-29, w:9, h:1, d:8, color:0x2e7d32}
       ],
       enemies: [
-        {type:'apple', x:0, y:0.8, z:-16, minZ:-18, maxZ:-14, speed:0.03}
+        {type:'apple', x:0, y:1.6, z:-14, minZ:-16, maxZ:-12, speed:0.04}
       ],
       coins: [
-        {x:0, y:1.2, z:-8}, {x:0, y:1.6, z:-16}, {x:0, y:2.0, z:-24}, {x:0, y:2.5, z:-30}, {x:0, y:2.5, z:-34}
+        {x:0, y:1.4, z:-7}, {x:0, y:2.2, z:-14}, {x:0, y:3.0, z:-21}, {x:0, y:4.0, z:-27}, {x:0, y:4.0, z:-31}
       ]
     },
     {
       name: "FASE 2 — LABIRINTO SUSPENSO",
-      introText: "Pequenas elevações muito fáceis de passar.",
+      introText: "Saltos suaves com pequenas variações laterais.",
       theme: 0x1a0a2a,
       platforms: [
-        {x:0, y:0, z:0, w:12, h:1, d:10, color:0x8e44ad},
-        {x:0, y:0.4, z:-8, w:10, h:1, d:8, color:0x9b59b6},
-        {x:0, y:0.8, z:-16, w:10, h:1, d:8, color:0x9b59b6},
-        {x:0, y:1.2, z:-24, w:10, h:1, d:8, color:0x9b59b6},
-        {x:0, y:1.6, z:-33, w:12, h:1, d:10, color:0x6c3483}
+        {x:0, y:0, z:0, w:8, h:1, d:6, color:0x8e44ad},
+        {x:2, y:0.8, z:-7, w:7, h:1, d:6, color:0x9b59b6},
+        {x:-2, y:1.6, z:-14, w:7, h:1, d:6, color:0x9b59b6},
+        {x:2, y:2.4, z:-21, w:7, h:1, d:6, color:0x9b59b6},
+        {x:0, y:3.2, z:-29, w:9, h:1, d:8, color:0x6c3483}
       ],
       enemies: [
-        {type:'pear', x:0, y:1.2, z:-24, minZ:-26, maxZ:-22, speed:0.03}
+        {type:'pear', x:2, y:2.4, z:-21, minX:-1, maxX:5, speed:0.04}
       ],
       coins: [
-        {x:0, y:1.2, z:-8}, {x:0, y:1.6, z:-16}, {x:0, y:2.0, z:-24}, {x:0, y:2.5, z:-30}, {x:0, y:2.5, z:-34}
+        {x:2, y:1.4, z:-7}, {x:-2, y:2.2, z:-14}, {x:2, y:3.0, z:-21}, {x:0, y:4.0, z:-27}, {x:0, y:4.0, z:-31}
       ]
     },
     {
       name: "FASE 3 — CIDADELA DIGITAL",
-      introText: "Avanço contínuo e super tranquilo.",
+      introText: "Avanço contínuo com robôs amigáveis ao salto.",
       theme: 0x051026,
       platforms: [
-        {x:0, y:0, z:0, w:12, h:1, d:10, color:0x2980b9},
-        {x:0, y:0.4, z:-8, w:10, h:1, d:8, color:0x3498db},
-        {x:0, y:0.8, z:-16, w:10, h:1, d:8, color:0x3498db},
-        {x:0, y:1.2, z:-24, w:10, h:1, d:8, color:0x3498db},
-        {x:0, y:1.6, z:-33, w:12, h:1, d:10, color:0x1f618d}
+        {x:0, y:0, z:0, w:8, h:1, d:6, color:0x2980b9},
+        {x:0, y:0.8, z:-7, w:7, h:1, d:6, color:0x3498db},
+        {x:0, y:1.6, z:-14, w:7, h:1, d:6, color:0x3498db},
+        {x:0, y:2.4, z:-21, w:7, h:1, d:6, color:0x3498db},
+        {x:0, y:3.2, z:-29, w:9, h:1, d:8, color:0x1f618d}
       ],
       enemies: [
-        {type:'speaker', x:0, y:0.8, z:-16, minZ:-18, maxZ:-14, speed:0.03}
+        {type:'speaker', x:0, y:0.8, z:-7, minZ:-9, maxZ:-5, speed:0.04}
       ],
       coins: [
-        {x:0, y:1.2, z:-8}, {x:0, y:1.6, z:-16}, {x:0, y:2.0, z:-24}, {x:0, y:2.5, z:-30}, {x:0, y:2.5, z:-34}
+        {x:0, y:1.4, z:-7}, {x:0, y:2.2, z:-14}, {x:0, y:3.0, z:-21}, {x:0, y:4.0, z:-27}, {x:0, y:4.0, z:-31}
       ]
     },
     {
       name: "FASE 4 — O PICO FINAL",
-      introText: "Última subida livre de perigos complexos!",
+      introText: "Última subida rápida até a vitória!",
       theme: 0x260510,
       platforms: [
-        {x:0, y:0, z:0, w:12, h:1, d:10, color:0xc0392b},
-        {x:0, y:0.4, z:-8, w:10, h:1, d:8, color:0xe74c3c},
-        {x:0, y:0.8, z:-16, w:10, h:1, d:8, color:0xe74c3c},
-        {x:0, y:1.2, z:-24, w:10, h:1, d:8, color:0xe74c3c},
-        {x:0, y:1.6, z:-33, w:12, h:1, d:10, color:0x962d22}
+        {x:0, y:0, z:0, w:8, h:1, d:6, color:0xc0392b},
+        {x:0, y:0.8, z:-7, w:7, h:1, d:6, color:0xe74c3c},
+        {x:0, y:1.6, z:-14, w:7, h:1, d:6, color:0xe74c3c},
+        {x:0, y:2.4, z:-21, w:7, h:1, d:6, color:0xe74c3c},
+        {x:0, y:3.2, z:-29, w:9, h:1, d:8, color:0x962d22}
       ],
       enemies: [
-        {type:'rob', x:0, y:1.2, z:-24, minZ:-26, maxZ:-22, speed:0.03}
+        {type:'rob', x:0, y:1.6, z:-14, minZ:-16, maxZ:-12, speed:0.04}
       ],
       coins: [
-        {x:0, y:1.2, z:-8}, {x:0, y:1.6, z:-16}, {x:0, y:2.0, z:-24}, {x:0, y:2.5, z:-30}, {x:0, y:2.5, z:-34}
+        {x:0, y:1.4, z:-7}, {x:0, y:2.2, z:-14}, {x:0, y:3.0, z:-21}, {x:0, y:4.0, z:-27}, {x:0, y:4.0, z:-31}
       ]
     }
   ];
